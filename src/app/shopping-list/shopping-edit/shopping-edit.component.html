@@ -29,7 +29,12 @@
       </div>
       <div class="row">
         <div class="col-xs-12">
-          <button class="btn btn-success" type="submit" [disabled]="!formRef.valid">add</button>
+          <button
+            class="btn btn-success"
+            type="submit" [disabled]="!formRef.valid"
+          >
+            {{ editMode ? 'update' : 'add' }}
+          </button>
           <button class="btn btn-danger" type="button">delete</button>
           <button class="btn btn-primary" type="button">clear</button>
         </div>
