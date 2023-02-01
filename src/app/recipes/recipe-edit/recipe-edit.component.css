@@ -1,0 +1,13 @@
+.btn-success {
+  margin-right: 10px;
+}
+
+#buttons {
+  margin-bottom: 10px;
+}
+
+#ingredients {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+}
