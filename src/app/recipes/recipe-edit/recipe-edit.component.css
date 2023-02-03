@@ -6,7 +6,7 @@
   margin-bottom: 10px;
 }
 
-#ingredients {
+#ingredientsList {
   display: flex;
   flex-direction: row;
   align-items: end;
