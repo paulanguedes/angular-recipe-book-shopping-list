@@ -69,7 +69,6 @@
           [formGroupName]="i"
           >
             <div class="col-xs-8">
-              <label for="name">ingredient name</label>
               <input
                 type="text"
                 class="form-control"
@@ -77,7 +76,6 @@
               >
             </div>
             <div class="col-xs-2">
-              <label for="amount">amount</label>
               <input
                 type="number"
                 class="form-control"
@@ -86,6 +84,16 @@
             </div>
             <div class="col-xs-2">
               <button class="btn btn-danger">X</button>
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-xs-12">
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="onAddIngredient()"
+              >add ingredient</button>
             </div>
           </div>
         </div>
