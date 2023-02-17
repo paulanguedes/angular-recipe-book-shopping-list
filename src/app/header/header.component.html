@@ -21,7 +21,11 @@
           </ul>
         </li>
         <li>
-          <a style="cursor: pointer;" *ngIf="isAuthenticated">logout</a>
+          <a
+            style="cursor: pointer;"
+            *ngIf="isAuthenticated"
+            (click)="onLogout()"
+          >logout</a>
         </li>
       </ul>
     </div>
