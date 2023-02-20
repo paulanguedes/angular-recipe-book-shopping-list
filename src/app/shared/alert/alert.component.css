@@ -22,3 +22,7 @@
 .alert-box-actions {
   text-align: right;
 }
+
+button {
+  cursor: pointer;
+}
