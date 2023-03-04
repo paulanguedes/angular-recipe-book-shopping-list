@@ -21,6 +21,6 @@ export function shoppingListReducer(
       };
 
     default:
-      break;
+      return state;
   }
 }
