@@ -21,8 +21,7 @@ import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer
     AppRoutingModule,
     StoreModule.forRoot({shoppingList: shoppingListReducer}),
     SharedModule,
-    CoreModule,
-    StoreModule.forRoot({}, {})
+    CoreModule
   ],
   bootstrap: [AppComponent],
 })
