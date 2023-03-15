@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import { ShoppingListService } from './../shopping-list/shopping-list.service';
+//import { ShoppingListService } from './../shopping-list/shopping-list.service';
 import { Ingredient } from './../shared/ingredient.model';
 import { Recipe } from './recipe.model';
 import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
@@ -38,7 +38,7 @@ export class RecipeService {
   // ];
 
   constructor(
-    private shoppingListService: ShoppingListService,
+    //private shoppingListService: ShoppingListService,
     private store: Store<fromShoppingList.AppState>
     ) {}
 
