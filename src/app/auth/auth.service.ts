@@ -23,7 +23,7 @@ export interface AuthResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  userSubject = new BehaviorSubject<User>(null);
+  //userSubject = new BehaviorSubject<User>(null);
   private tokenExpirationTimer: any;
 
   constructor(
