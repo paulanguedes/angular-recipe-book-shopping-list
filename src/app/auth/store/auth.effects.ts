@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
+import { of } from "rxjs";
+import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, map, switchMap } from "rxjs/operators";
-import { of } from "rxjs";
+import { catchError, map, switchMap, tap } from "rxjs/operators";
 
 import { environment } from '../../../environments/environment';
 import * as AuthActions from './auth.actions';
@@ -24,8 +25,8 @@ export class AuthEffects {
       ofType(AuthActions.LOGIN_START),
       switchMap((authData: AuthActions.LoginStart) => {
         return this.http.post<AuthResponseData>(
-          'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
-          + environment.firebaseAPIKey,
+          'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+          environment.firebaseAPIKey,
           {
             email: authData.payload.email,
             password: authData.payload.password,
@@ -36,12 +37,12 @@ export class AuthEffects {
               const expirationDate = new Date(
                 new Date().getTime() + +resData.expiresIn * 1000
               );
-              return of(new AuthActions.Login({
+              return new AuthActions.Login({
                 email: resData.email,
                 userId: resData.localId,
                 token: resData.idToken,
                 expirationDate: expirationDate
-              }));
+              });
             }),
             catchError( error => {
             //...
@@ -49,14 +50,19 @@ export class AuthEffects {
           })
         );
       }),
-      // aqui
-
     ), { dispatch: false}
-    // ou aqui
   );
+
+  authSuccess = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.LOGIN),
+    tap(() => {
+      this.router.navigate(['/']);
+    })
+  ), { dispatch: false });
 
   constructor (
     private actions$: Actions,
     private http: HttpClient,
+    private router: Router
   ) {}
 }
