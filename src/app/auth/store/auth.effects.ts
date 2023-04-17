@@ -19,6 +19,7 @@ export interface AuthResponseData {
 
 @Injectable()
 export class AuthEffects {
+  authSignUp = createEffect(() => this.actions$.pipe());
 
   authLogin = createEffect(() =>
     this.actions$.pipe(
@@ -37,16 +38,44 @@ export class AuthEffects {
               const expirationDate = new Date(
                 new Date().getTime() + +resData.expiresIn * 1000
               );
-              return new AuthActions.Login({
+              return new AuthActions.AuthenticationSuccess({
                 email: resData.email,
                 userId: resData.localId,
                 token: resData.idToken,
                 expirationDate: expirationDate
               });
             }),
-            catchError( error => {
-            //...
-            return of();
+            catchError( errorResponse => {
+              let errorMessage = 'An unknown error occured!';
+
+              if (!errorResponse.error || !errorResponse.error.error) {
+                return of(new AuthActions.AuthenticationFail(errorMessage));
+              }
+
+              switch (errorResponse.error.error.message) {
+                case 'EMAIL_EXISTS':
+                  errorMessage = 'Email already exists';
+                  break;
+                case 'OPERATION_NOT_ALLOWED':
+                  errorMessage = 'You are not allowed to access';
+                  break;
+                case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+                  errorMessage = 'Please try again later';
+                  break;
+                case 'EMAIL_NOT_FOUND':
+                  errorMessage = 'This email does not exist';
+                  break;
+                case 'INVALID_PASSWORD':
+                  errorMessage = 'Wrong password';
+                  break;
+                case 'USER_DISABLED':
+                  errorMessage = 'Please enter a valid user';
+                  break;
+
+                default:
+                  break;
+              }
+            return of(new AuthActions.AuthenticationFail(errorMessage));
           })
         );
       }),
@@ -54,7 +83,7 @@ export class AuthEffects {
   );
 
   authSuccess = createEffect(() => this.actions$.pipe(
-    ofType(AuthActions.LOGIN),
+    ofType(AuthActions.AUTHENTICATION_SUCCESS),
     tap(() => {
       this.router.navigate(['/']);
     })
