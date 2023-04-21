@@ -125,8 +125,8 @@ export class AuthEffects {
     ), { dispatch: false}
   );
 
-  authSuccess = createEffect(() => this.actions$.pipe(
-    ofType(AuthActions.AUTHENTICATION_SUCCESS),
+  authRedirect = createEffect(() => this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATION_SUCCESS, AuthActions.LOGOUT),
     tap(() => {
       this.router.navigate(['/']);
     })

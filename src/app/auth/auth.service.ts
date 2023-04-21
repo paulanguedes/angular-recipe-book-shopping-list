@@ -32,49 +32,49 @@ export class AuthService {
     private store: Store<fromApp.AppState>
   ) { }
 
-  signup(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
-      environment.firebaseAPIKey,
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true
-      }
-    ).pipe(catchError(this.handleError), tap(responseData => {
-      this.handleAuthentication(
-        responseData.email,
-        responseData.localId,
-        responseData.idToken,
-        +responseData.expiresIn
-      )
-    }));
-  }
+  // signup(email: string, password: string) {
+  //   return this.http.post<AuthResponseData>(
+  //     'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' +
+  //     environment.firebaseAPIKey,
+  //     {
+  //       email: email,
+  //       password: password,
+  //       returnSecureToken: true
+  //     }
+  //   ).pipe(catchError(this.handleError), tap(responseData => {
+  //     this.handleAuthentication(
+  //       responseData.email,
+  //       responseData.localId,
+  //       responseData.idToken,
+  //       +responseData.expiresIn
+  //     )
+  //   }));
+  // }
 
-  login(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
-      environment.firebaseAPIKey,
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true
-      }
-    ).pipe(catchError(this.handleError), tap(responseData => {
-      this.handleAuthentication(
-        responseData.email,
-        responseData.localId,
-        responseData.idToken,
-        +responseData.expiresIn
-      )
-    }));
-  }
+  // login(email: string, password: string) {
+  //   return this.http.post<AuthResponseData>(
+  //     'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
+  //     environment.firebaseAPIKey,
+  //     {
+  //       email: email,
+  //       password: password,
+  //       returnSecureToken: true
+  //     }
+  //   ).pipe(catchError(this.handleError), tap(responseData => {
+  //     this.handleAuthentication(
+  //       responseData.email,
+  //       responseData.localId,
+  //       responseData.idToken,
+  //       +responseData.expiresIn
+  //     )
+  //   }));
+  // }
 
   logout() {
-    //this.userSubject.next(null);
+    // this.userSubject.next(null);
     this.store.dispatch(new AuthActions.Logout());
 
-    this.router.navigate(['/auth']);
+    // this.router.navigate(['/auth']);
 
     localStorage.removeItem('userData');
     if (this.tokenExpirationTimer) {
