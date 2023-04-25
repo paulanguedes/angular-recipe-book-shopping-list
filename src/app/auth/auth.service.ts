@@ -27,10 +27,23 @@ export class AuthService {
   private tokenExpirationTimer: any;
 
   constructor(
-    private http: HttpClient,
-    private router: Router,
+    // private http: HttpClient,
+    // private router: Router,
     private store: Store<fromApp.AppState>
   ) { }
+
+  setLogoutTimer(expirationDuration: number) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      this.store.dispatch(new AuthActions.Logout());
+    }, expirationDuration);
+  };
+
+  clearLogoutTimer() {
+    if (this.tokenExpirationTimer) {
+      clearTimeout(this.tokenExpirationTimer);
+      this.tokenExpirationTimer = null;
+    }
+  };
 
   // signup(email: string, password: string) {
   //   return this.http.post<AuthResponseData>(
@@ -70,119 +83,119 @@ export class AuthService {
   //   }));
   // }
 
-  logout() {
-    // this.userSubject.next(null);
-    this.store.dispatch(new AuthActions.Logout());
+  // logout() {
+  //   // this.userSubject.next(null);
+  //   this.store.dispatch(new AuthActions.Logout());
 
-    // this.router.navigate(['/auth']);
+  //   // this.router.navigate(['/auth']);
 
-    localStorage.removeItem('userData');
-    if (this.tokenExpirationTimer) {
-      clearTimeout(this.tokenExpirationTimer);
-    }
-    this.tokenExpirationTimer = null;
-  }
+  //   localStorage.removeItem('userData');
+  //   if (this.tokenExpirationTimer) {
+  //     clearTimeout(this.tokenExpirationTimer);
+  //   }
+  //   this.tokenExpirationTimer = null;
+  // }
 
-  autoLogout(expirationDuration: number) {
-    this.tokenExpirationTimer = setTimeout(() => {
-      this.logout();
-    }, expirationDuration);
-  }
+  // autoLogout(expirationDuration: number) {
+  //   this.tokenExpirationTimer = setTimeout(() => {
+  //     this.logout();
+  //   }, expirationDuration);
+  // }
 
-  autoLogin() {
-    const userData: {
-      email: string,
-      id: string,
-      _token: string,
-      _tokenExpirationDate: string
-    } = JSON.parse(localStorage.getItem('userData'));
+  // autoLogin() {
+  //   const userData: {
+  //     email: string,
+  //     id: string,
+  //     _token: string,
+  //     _tokenExpirationDate: string
+  //   } = JSON.parse(localStorage.getItem('userData'));
 
-    if (!userData) {
-      return;
-    }
+  //   if (!userData) {
+  //     return;
+  //   }
 
-    const loadedUser = new User(
-      userData.email,
-      userData.id,
-      userData._token,
-      new Date(userData._tokenExpirationDate)
-    );
+  //   const loadedUser = new User(
+  //     userData.email,
+  //     userData.id,
+  //     userData._token,
+  //     new Date(userData._tokenExpirationDate)
+  //   );
 
-    if(loadedUser.token) {
-      //this.userSubject.next(loadedUser);
-      this.store.dispatch(new AuthActions.AuthenticationSuccess({
-        email: loadedUser.email,
-        userId: loadedUser.id,
-        token: loadedUser.token,
-        expirationDate: new Date(userData._tokenExpirationDate)
-      }));
+  //   if(loadedUser.token) {
+  //     //this.userSubject.next(loadedUser);
+  //     this.store.dispatch(new AuthActions.AuthenticationSuccess({
+  //       email: loadedUser.email,
+  //       userId: loadedUser.id,
+  //       token: loadedUser.token,
+  //       expirationDate: new Date(userData._tokenExpirationDate)
+  //     }));
 
-      const expirationDuration =
-      new Date(userData._tokenExpirationDate).getTime() -
-      new Date().getTime();
-      this.autoLogout(expirationDuration);
-    }
-  }
+  //     const expirationDuration =
+  //     new Date(userData._tokenExpirationDate).getTime() -
+  //     new Date().getTime();
+  //     this.autoLogout(expirationDuration);
+  //   }
+  // }
 
-  private handleAuthentication(
-    email: string,
-    userId: string,
-    token: string,
-    expiresIn: number
-  ) {
-    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+  // private handleAuthentication(
+  //   email: string,
+  //   userId: string,
+  //   token: string,
+  //   expiresIn: number
+  // ) {
+  //   const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
 
-      const user = new User(
-        email,
-        userId,
-        token,
-        expirationDate
-      );
+  //     const user = new User(
+  //       email,
+  //       userId,
+  //       token,
+  //       expirationDate
+  //     );
 
-      //this.userSubject.next(user);
-      this.store.dispatch(new AuthActions.AuthenticationSuccess({
-        email: email,
-        userId: userId,
-        token: token,
-        expirationDate: expirationDate
-      }));
+  //     //this.userSubject.next(user);
+  //     this.store.dispatch(new AuthActions.AuthenticationSuccess({
+  //       email: email,
+  //       userId: userId,
+  //       token: token,
+  //       expirationDate: expirationDate
+  //     }));
 
-      this.autoLogout(expiresIn * 1000);
-      localStorage.setItem('userData', JSON.stringify(user));
-  }
+  //     this.autoLogout(expiresIn * 1000);
+  //     localStorage.setItem('userData', JSON.stringify(user));
+  // }
 
-  private handleError(errorResponse: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occured!';
+  // private handleError(errorResponse: HttpErrorResponse) {
+  //   let errorMessage = 'An unknown error occured!';
 
-    if (!errorResponse.error || !errorResponse.error.error) {
-      return throwError(errorMessage);
-    }
+  //   if (!errorResponse.error || !errorResponse.error.error) {
+  //     return throwError(errorMessage);
+  //   }
 
-    switch (errorResponse.error.error.message) {
-      case 'EMAIL_EXISTS':
-        errorMessage = 'Email already exists';
-        break;
-      case 'OPERATION_NOT_ALLOWED':
-        errorMessage = 'You are not allowed to access';
-        break;
-      case 'TOO_MANY_ATTEMPTS_TRY_LATER':
-        errorMessage = 'Please try again later';
-        break;
-      case 'EMAIL_NOT_FOUND':
-        errorMessage = 'This email does not exist';
-        break;
-      case 'INVALID_PASSWORD':
-        errorMessage = 'Wrong password';
-        break;
-      case 'USER_DISABLED':
-        errorMessage = 'Please enter a valid user';
-        break;
+  //   switch (errorResponse.error.error.message) {
+  //     case 'EMAIL_EXISTS':
+  //       errorMessage = 'Email already exists';
+  //       break;
+  //     case 'OPERATION_NOT_ALLOWED':
+  //       errorMessage = 'You are not allowed to access';
+  //       break;
+  //     case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+  //       errorMessage = 'Please try again later';
+  //       break;
+  //     case 'EMAIL_NOT_FOUND':
+  //       errorMessage = 'This email does not exist';
+  //       break;
+  //     case 'INVALID_PASSWORD':
+  //       errorMessage = 'Wrong password';
+  //       break;
+  //     case 'USER_DISABLED':
+  //       errorMessage = 'Please enter a valid user';
+  //       break;
 
-      default:
-        break;
-    }
+  //     default:
+  //       break;
+  //   }
 
-    return throwError(errorMessage);
-  }
+  //   return throwError(errorMessage);
+  // }
 
 }
