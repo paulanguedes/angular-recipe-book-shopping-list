@@ -12,7 +12,7 @@ import { Observable, Subscription } from 'rxjs';
 
 import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../shared/placeholder.directive';
-import { AuthResponseData, AuthService } from './auth.service';
+// import { AuthResponseData, AuthService } from './auth.service';
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
 
