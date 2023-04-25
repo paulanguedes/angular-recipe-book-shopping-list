@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
 export const LOGIN_START = '[Auth] Login Start';
+export const AUTO_LOGIN = '[Auth] Auto Login';
 export const AUTHENTICATION_FAIL = '[Auth] Authentication Fail';
 export const AUTHENTICATION_SUCCESS = '[Auth] Authentication Success';
 export const LOGOUT = '[Auth] Logout';
@@ -60,8 +61,13 @@ export class ClearError implements Action {
   readonly type = CLEAR_ERROR;
 }
 
+export class AutoLogin implements Action {
+  readonly type = AUTO_LOGIN;
+}
+
 export type AuthActions =
   | AuthenticationSuccess
+  | AutoLogin
   | Logout
   | LoginStart
   | SignupStart
